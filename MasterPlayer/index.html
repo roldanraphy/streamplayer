@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+
+<link href="volume.css" rel="stylesheet" type="text/css" />
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script src="NodePlayer.js"></script>
+<script src="video.js"></script>
+
+<script>
+  window.onload = function () {
+
+	var domain = document.location.hostname;
+
+	if (!['jcool.live', 'hnhtalpakan.live', 'agtalpakan.live', 'sph88.live', 'wdslasher.live'].includes(domain)) {
+
+		window.location.replace("https://www.youtube.com/embed/BjUn6pu74wc?autoplay=1");
+
+	}
+    var istab = false;
+    var v_source = "ws://157.245.60.68:8000/live/esportwd.flv";
+
+    var button = document.getElementById("play");
+    var canvas = document.getElementById("video");
+    var player = document.getElementById("video-player");
+
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+
+    var url = document.getElementById("url");
+    var button = document.getElementById("play");
+    var audioCB = document.getElementById("audioCB");
+
+    audioCB.checked = 1;
+
+    var np = new Module.NodePlayer();
+    var isStarting = false;
+    np.on('start', () => {
+      Module.print('NodePlayer on start');
+    });
+    np.on('close', () => {
+      Module.print('NodePlayer on close');
+    });
+    np.on('error', (err) => {
+      Module.print('NodePlayer on error',err);
+    });
+    np.setPlayView('video');
+    np.setScaleMode(1);
+    np.enableVideo(1);
+    np.enableAudio(0);
+    var playback = function (event) {
+      if (isStarting) {
+        np.stop();
+        button.value = "►";
+        isStarting = false;
+      } else {
+        np.start(v_source);
+        button.value = "❚❚";
+        isStarting = true;
+      }
+    }
+
+    var audioChange = function () {
+	
+     	if (audioCB.checked == true) {
+		np.enableAudio(0);
+	} else {
+		np.enableAudio(1);
+	}
+
+    }
+
+    if (button.addEventListener) {
+      button.addEventListener("click", playback, false);
+    } else if (button.attachEvent) {
+      button.attachEvent('onclick', playback);
+    }
+
+    if (audioCB.addEventListener) {
+      audioCB.addEventListener("click", audioChange, false);
+    } else if (audioCB.attachEvent) {
+      audioCB.attachEvent('onclick', audioChange);
+    }
+
+
+
+        np.start(v_source);
+        button.value = "❚❚";
+        isStarting = true;
+
+
+
+	setInterval(function() {
+
+		if (isStarting == true) {
+			
+			np.stop();
+        		button.value = "►";
+        		isStarting = false;
+
+      			setTimeout(function(){
+       				np.start("ws://139.59.252.78:8000/live/esportwd.flv");
+        			button.value = "❚❚";
+        			isStarting = true;
+      			},500);
+
+		}
+
+	}, 180000);
+
+	
+
+	document.addEventListener('visibilitychange', function (event) {
+   		if (document.hidden) {
+			np.stop();
+        		button.value = "►";
+        		isStarting = false;
+			istab = false;
+    		} else {
+        		np.start(v_source);
+        		button.value = "❚❚";
+        		isStarting = true;
+			istab = true;
+    		}
+	});
+
+	window.addEventListener('resize', function(event){
+		location.reload();
+	});
+
+
+  };
+
+
+</script>
+
+<body>
+
+   <div class="video-player" style="max-width: 100%; height: 100%;">
+
+   <canvas id="video"></canvas>
+
+      <div class="player-controls">
+
+
+
+  	<input id="play" class="play-button" type="button"/>
+	<div>&nbsp;&nbsp</div>
+	<label class="volume">
+
+    		<input id="audioCB" type="checkbox">
+
+    		<svg viewBox="0 0 108 96">
+
+        		<path d="M7,28 L35,28 L35,28 L59,8 L59,88 L35,68 L7,68 C4.790861,68 3,66.209139 3,64 L3,32 C3,29.790861 4.790861,28 7,28 Z"></path>
+        		<path d="M79,62 C83,57.3333333 85,52.6666667 85,48 C85,43.3333333 83,38.6666667 79,34 L49,3"></path>
+        		<path d="M95,69 C101.666667,61.6666667 105,54.3333333 105,47 C105,39.6666667 101.666667,32.3333333 95,25 L75.5,6 L49,33"></path>
+
+    		</svg>
+
+	</label>
+
+
+      </div>
+
+     </div>
+
+</body>
+
+</html>
